@@ -56,16 +56,18 @@ Demo logins (also seeded): `demo@vilas.com / demo123` · `arjun@example.com / pa
 
 ## Deploy to Vercel
 
-The app is a plain Flask WSGI app — `api/index.py` re-exports it and `vercel.json` rewrites every route to it (Flask serves the static assets itself).
+**Live: https://vilas-stays-tables-kkatars-projects.vercel.app** (Vercel auto-detects the Flask backend and serves the whole app; `api/index.py` re-exports the WSGI `app`, and no `vercel.json` rewrites are used — internal rewrites to a function path 404 on the current backend-framework preset).
 
 1. Push this repo to GitHub (`Kkatar/internship`, branch `main`).
-2. Create a Vercel project from the repo (framework: Other, no build command, no output dir), or use the Vercel connector.
+2. Import the repo on Vercel. Framework preset: **Other** / Python — Vercel detects `app.py` + `requirements.txt` and routes all paths to the Flask app (Flask serves the static assets itself). Root directory: repo root.
 3. Set these environment variables on the Vercel project (never commit them):
    - `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_KEY` — Supabase Auth + favourites + orders
    - `DATABASE_URL` — Supabase **transaction pooler** DSN (`...pooler.supabase.com:6543`, user `postgres.<ref>`, `sslmode=require`) for the booking engine
    - `SECRET_KEY` — long random string for Flask sessions
-4. Deploy. Vercel filesystem is read-only outside `/tmp`, which is exactly why the booking engine persists in Postgres; SQLite remains only as a local fallback (exports/audit degrade to `/tmp` if the FS is read-only).
+4. If the team has **Vercel Authentication** enabled on deployments (default on new Hobby teams), disable it under **Project → Settings → Deployment Protection** or the site will redirect everyone to a Vercel SSO login.
 5. Verify: open the deployment URL → sign in as `demo@vilas.com` / `demo123` → search, hold a room, pay (simulated, Luhn-valid `4242 4242 4242 4242`), order online/dine-in, export bookings.
+
+Note: Vercel's filesystem is read-only outside `/tmp`, which is exactly why the booking engine persists in Postgres; SQLite remains only as a local fallback (exports/audit degrade to `/tmp` if the FS is read-only).
 
 ## Project layout
 

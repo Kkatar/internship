@@ -1,0 +1,9 @@
+.env
+qa/
+node_modules/
+data/vilas.db
+data/audit.jsonl
+exports/
+image-search/
+uploads/
+.ssh/
