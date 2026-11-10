@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+{% block title %}{{ hotel_name }}{% endblock %}
+
+{% block content %}
+<!-- ============ HOTEL HERO ============ -->
+<section class="hotel-hero">
+  <div class="bg" data-parallax="0.14"><img id="heroImg" src="" alt="{{ hotel_name }}"></div>
+  <div class="hotel-hero-inner">
+    <a class="back-link" href="/#stays">← All stays</a>
+    <div class="hotel-title-row">
+      <div>
+        <span class="eyebrow" id="hKicker">The Stay</span>
+        <h1 class="display-1" id="hName" style="margin-top:14px">{{ hotel_name }}</h1>
+        <div class="hotel-meta" id="hMeta"></div>
+      </div>
+      <div class="hotel-actions">
+        <button class="btn btn-ghost" id="favToggle">♡ Save</button>
+        <a class="btn btn-gold" href="#rooms">Reserve a room</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUB NAV ============ -->
+<nav class="subnav" id="subnav">
+  <div class="container subnav-inner">
+    <a href="#rooms">Rooms</a>
+    <a href="#availability">Availability</a>
+    <a href="#dining">Dining</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ============ ROOMS ============ -->
+<section class="section" id="rooms" style="padding-top:40px">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Room Categories</span>
+      <h2 class="display-2">Choose your <em class="gold">category.</em></h2>
+      <p class="lead">Three tiers, photographed as they are — swipe each gallery, watch the live counts, hold a room in seconds.</p>
+    </div>
+    <div id="roomList">
+      <div class="small" style="text-align:center;padding:50px 0">Loading rooms…</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AVAILABILITY / MANAGE ============ -->
+<section class="section" id="availability" style="padding-top:20px">
+  <div class="container">
+    <div class="avail-panel" data-reveal>
+      <div class="avail-head">
+        <div>
+          <span class="eyebrow">Manage · Live Room Status</span>
+          <h2 class="display-3" style="margin-top:12px">Reserved &amp; booked, <em class="gold">right now.</em></h2>
+          <p class="small" style="margin-top:8px;max-width:56ch">Visible to every guest. Reserved = held without payment.
+            Booked = paid &amp; confirmed. Cancelled rooms return to the pool instantly.</p>
+        </div>
+        <div class="legend" style="margin:0">
+          <span class="chip reserved"><span class="dot"></span> Reserved</span>
+          <span class="chip booked"><span class="dot"></span> Booked</span>
+          <span class="chip free"><span class="dot"></span> Available</span>
+        </div>
+      </div>
+      <div class="avail-rows" id="availRows">
+        <div class="small">Reading live availability…</div>
+      </div>
+      <div class="avail-total" id="availTotals"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DINING / FOOD ============ -->
+<section class="section" id="dining">
+  <div class="container">
+    <div class="section-head row">
+      <div>
+        <span class="eyebrow">The Kitchen</span>
+        <h2 class="display-2" style="margin-top:14px">Order the <em class="gold">feast.</em></h2>
+        <p class="lead" style="margin-top:12px">Delivery to your door (pay online), or dine in — pick the date &amp; time of
+          your table and settle up at the restaurant.</p>
+      </div>
+      <div class="legend" style="margin:0">
+        <span class="chip gold" id="dineLabel">₹ · Restaurant</span>
+        <span class="chip" id="dineHours">Hours</span>
+      </div>
+    </div>
+
+    <div class="menu-grid" id="menuGrid">
+      <div class="small" style="grid-column:1/-1;text-align:center;padding:40px">Loading menu…</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT (hotel) ============ -->
+<section class="section" id="about" style="background:linear-gradient(180deg, transparent, rgba(17,28,49,.45), transparent)">
+  <div class="container hotel-about-grid">
+    <div class="frame" data-reveal="left">
+      <img id="aboutImg" src="/static/img/about-interior.jpg" data-fallback="/static/img/hotel-tandoor.jpg" alt="Inside the hotel">
+    </div>
+    <div data-reveal="right">
+      <span class="eyebrow">About Us</span>
+      <h2 class="display-2" style="margin:14px 0 18px">The story of <em class="gold" id="aboutName">{{ hotel_name }}</em></h2>
+      <p class="lead" id="aboutText" style="max-width:none">…</p>
+      <div class="facts" id="aboutFacts"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Contact</span>
+      <h2 class="display-2">Reach the <em class="gold">front desk.</em></h2>
+    </div>
+    <div class="contact-grid" id="contactGrid"></div>
+  </div>
+</section>
+
+<!-- ============ FLOATING CART ============ -->
+<button class="cart-fab" id="cartFab">
+  ✦ <span id="cartFabText">Cart</span> <span class="count" id="cartCount">0</span>
+</button>
+
+<!-- ============ MODAL: RESERVE ============ -->
+<div class="modal-root" id="reserveModal">
+  <div class="modal-backdrop"></div>
+  <div class="modal">
+    <button class="modal-close" data-close>✕</button>
+    <div id="reserveFormView">
+      <span class="eyebrow">Step 1 · Hold your room</span>
+      <h3 style="margin-top:12px">Reserve — pay later</h3>
+      <p class="sub">The room is held as <b style="color:var(--amber)">reserved</b> until you complete the simulated payment,
+        which turns it into <b style="color:var(--green)">booked</b>.</p>
+
+      <form id="reserveForm">
+        <div class="field">
+          <label for="rRoom">Room category</label>
+          <select id="rRoom" required></select>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="rIn">Check in</label><input id="rIn" type="date" required></div>
+          <div class="field"><label for="rOut">Check out</label><input id="rOut" type="date" required></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="rGuests">Guests</label>
+            <select id="rGuests">
+              <option>1</option><option selected>2</option><option>3</option>
+              <option>4</option><option>5</option><option>6</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="rRooms">Rooms</label>
+            <select id="rRooms"><option selected>1</option><option>2</option><option>3</option><option>4</option></select>
+          </div>
+        </div>
+
+        <div class="summary-box" id="rSummary"></div>
+        <button class="btn btn-gold btn-block" type="submit">Hold reservation ✦</button>
+        <p class="form-note" style="text-align:center;margin-top:12px">No card needed yet — cancel free, anytime.</p>
+      </form>
+    </div>
+
+    <div id="reserveSuccessView" style="display:none">
+      <div class="success-view">
+        <div class="success-ring">✓</div>
+        <h3>Room held for you</h3>
+        <p class="sub" style="margin-bottom:0">Status: <span class="badge reserved">Reserved — payment pending</span></p>
+        <div class="booking-code" id="sCode">VIL-······</div>
+        <p class="small" id="sSummary"></p>
+        <div class="success-actions">
+          <button class="btn btn-gold" id="sPayNow">Pay now (simulate)</button>
+          <a class="btn btn-ghost" href="/profile">View in profile</a>
+          <button class="btn btn-soft" data-close>Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: PAY ============ -->
+<div class="modal-root" id="payModal">
+  <div class="modal-backdrop"></div>
+  <div class="modal">
+    <button class="modal-close" data-close>✕</button>
+    <span class="eyebrow">Step 2 · Simulated payment</span>
+    <h3 style="margin-top:12px">Confirm your booking</h3>
+    <p class="sub">Demo gateway — no real money moves. Try card <b style="color:var(--gold-2)">4242 4242 4242 4242</b>,
+      any future expiry, any CVV.</p>
+
+    <div class="summary-box" id="pSummary"></div>
+
+    <div class="seg" id="payMethods">
+      <button type="button" class="active" data-m="card">Card</button>
+      <button type="button" data-m="upi">UPI</button>
+      <button type="button" data-m="wallet">Wallet</button>
+    </div>
+
+    <form id="payForm">
+      <div id="payCardFields">
+        <div class="field"><label for="pNum">Card number</label>
+          <input id="pNum" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" maxlength="19"></div>
+        <div class="field"><label for="pName">Name on card</label>
+          <input id="pName" autocomplete="cc-name" placeholder="YOUR NAME"></div>
+        <div class="field-row">
+          <div class="field"><label for="pExp">Expiry</label>
+            <input id="pExp" inputmode="numeric" placeholder="MM/YY" maxlength="5"></div>
+          <div class="field"><label for="pCvv">CVV</label>
+            <input id="pCvv" inputmode="numeric" placeholder="123" maxlength="4"></div>
+        </div>
+      </div>
+
+      <div id="payUpiFields" style="display:none">
+        <div class="field"><label for="pUpi">UPI ID</label>
+          <input id="pUpi" placeholder="yourname@okhdfc"></div>
+      </div>
+
+      <div id="payWalletFields" style="display:none">
+        <div class="field"><label for="pWallet">Wallet</label>
+          <select id="pWallet">
+            <option>Vilas Wallet — ₹ balance 5,000</option>
+            <option>Food Wallet — ₹ balance 1,200</option>
+          </select></div>
+      </div>
+
+      <button class="btn btn-gold btn-block" type="submit" id="paySubmit">Simulate payment</button>
+      <p class="form-note" style="text-align:center;margin-top:12px">🔒 Simulated gateway · nothing is charged</p>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL: CART ============ -->
+<div class="modal-root" id="cartModal">
+  <div class="modal-backdrop"></div>
+  <div class="modal">
+    <button class="modal-close" data-close>✕</button>
+    <span class="eyebrow">Your order</span>
+    <h3 style="margin-top:12px">Cart</h3>
+    <p class="sub">Review the dishes, then choose delivery or your table.</p>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="summary-box" id="cartSummary"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-gold" id="toCheckout" style="flex:1">Checkout ✦</button>
+      <button class="btn btn-soft" id="clearCart">Clear</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: CHECKOUT ============ -->
+<div class="modal-root" id="checkoutModal">
+  <div class="modal-backdrop"></div>
+  <div class="modal">
+    <button class="modal-close" data-close>✕</button>
+    <span class="eyebrow">Checkout</span>
+    <h3 style="margin-top:12px">How would you like it?</h3>
+
+    <div class="seg" id="orderModes">
+      <button type="button" class="active" data-mode="online">🛵 Delivery · pay online</button>
+      <button type="button" data-mode="offline">🍽 Dine-in · date &amp; time</button>
+    </div>
+
+    <div class="summary-box" id="coSummary"></div>
+
+    <form id="checkoutForm">
+      <!-- online -->
+      <div id="onlineFields">
+        <div class="field"><label for="oAddress">Delivery address</label>
+          <textarea id="oAddress" placeholder="Flat / house, street, landmark, Kolhapur…"></textarea></div>
+        <div class="field"><label>Payment method</label></div>
+        <div class="seg" id="orderPayMethods" style="margin-top:-8px">
+          <button type="button" class="active" data-m="card">Card</button>
+          <button type="button" data-m="upi">UPI</button>
+          <button type="button" data-m="wallet">Wallet</button>
+        </div>
+        <div id="omCard">
+          <div class="field"><label for="oNum">Card number</label>
+            <input id="oNum" inputmode="numeric" placeholder="4242 4242 4242 4242" maxlength="19"></div>
+          <div class="field-row">
+            <div class="field"><label for="oExp">Expiry</label><input id="oExp" placeholder="MM/YY" maxlength="5"></div>
+            <div class="field"><label for="oCvv">CVV</label><input id="oCvv" inputmode="numeric" placeholder="123" maxlength="4"></div>
+          </div>
+        </div>
+        <div id="omUpi" style="display:none">
+          <div class="field"><label for="oUpi">UPI ID</label><input id="oUpi" placeholder="yourname@okhdfc"></div>
+        </div>
+      </div>
+
+      <!-- offline -->
+      <div id="offlineFields" style="display:none">
+        <p class="form-note" style="margin-bottom:14px">Pick the date &amp; time you'll dine in — the table and order are
+          held for you, payment happens at the restaurant.</p>
+        <div class="field-row">
+          <div class="field"><label for="oDate">Dine-in date</label><input id="oDate" type="date"></div>
+          <div class="field"><label for="oTime">Time</label><input id="oTime" type="time" value="20:00"></div>
+        </div>
+        <div class="field"><label for="oGuests">Guests at the table</label>
+          <select id="oGuests"><option>1</option><option selected>2</option><option>3</option><option>4</option>
+            <option>6</option><option>8</option><option>10</option></select></div>
+      </div>
+
+      <button class="btn btn-gold btn-block" type="submit" id="coSubmit" style="margin-top:6px">Place order ✦</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block pagescript %}
+<script src="{{ url_for('static', filename='js/hotel.js') }}"></script>
+{% endblock %}

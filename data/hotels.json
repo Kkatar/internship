@@ -1,0 +1,224 @@
+{
+  "hotels": [
+    {
+      "slug": "tandoor-corner",
+      "name": "Tandoor Corner",
+      "city": "Kolhapur",
+      "category": "Heritage",
+      "tagline": "Mughlai kitchen & rooms above",
+      "address": "Crusher Chauk, MH SH 116, Kolhapur City, Maharashtra 416003",
+      "phone": "+91 231 264 8890",
+      "email": "stay@tandoorcorner.in",
+      "hours": "Front desk 24×7 · Kitchen 11:00 AM – 11:00 PM",
+      "rating": 4.1,
+      "reviews": 1363,
+      "dine_label": "₹200–400 per person · Mughlai restaurant",
+      "image": "/static/img/hotel-tandoor.jpg",
+      "description": "A Kolhapur institution where the clay oven never sleeps — Mughlai plates below, quiet rooms above.",
+      "about": "For more than two decades, Tandoor Corner has fed Kolhapur from its kitchen at Crusher Chauk. The butter chicken has a following of its own, the tandoor is lit before sunrise, and the dining room has welcomed generations of families, travellers and late-night cravings. Upstairs, a handful of rooms keep the same warmth: crisp linen, brass lamplight, and the smell of fresh naan drifting up the stairwell. It is not a grand hotel — it is a delicious address that happens to let you sleep over.",
+      "menu_key": "tandoor-corner",
+      "room_types": [
+        {
+          "name": "Standard",
+          "price": 2400,
+          "total": 12,
+          "images": ["/static/img/room-standard-1.jpg", "/static/img/room-standard-2.jpg"],
+          "desc": "Compact, spotless and warm — made for travellers who spend their day out in the city and their night well rested.",
+          "amenities": ["Free Wi-Fi", "Air conditioning", "43\" TV", "Hot water", "Breakfast", "24×7 room service"]
+        },
+        {
+          "name": "Deluxe",
+          "price": 4200,
+          "total": 8,
+          "images": ["/static/img/room-deluxe-1.jpg", "/static/img/room-deluxe-2.jpg"],
+          "desc": "A king bed, a window seat over the street, and enough room to stretch after a long thali.",
+          "amenities": ["King bed", "City view", "Minibar", "Work desk", "Breakfast", "Evening tea"]
+        },
+        {
+          "name": "Suite",
+          "price": 7500,
+          "total": 4,
+          "images": ["/static/img/room-suite-1.jpg", "/static/img/room-suite-2.jpg"],
+          "desc": "A living room of your own, a bath worth lingering in, and dinner downstairs whenever you please.",
+          "amenities": ["Separate living area", "Bathtub", "Lounge access", "Complimentary dinner", "Butler service", "Late checkout"]
+        }
+      ]
+    },
+    {
+      "slug": "shahu-palace",
+      "name": "Shahu Palace",
+      "city": "Kolhapur",
+      "category": "Heritage",
+      "tagline": "Carved balconies, cool corridors",
+      "address": "Ramling Road, near Shahu Palace, Kolhapur, Maharashtra 416003",
+      "phone": "+91 231 260 0111",
+      "email": "reservations@shahupalace.in",
+      "hours": "Front desk 24×7 · Breakfast 7:00 – 10:30 AM",
+      "rating": 4.5,
+      "reviews": 892,
+      "dine_label": "₹300–500 per person · Kolhapuri thali",
+      "image": "/static/img/hotel-palace.jpg",
+      "description": "Heritage rooms beside the old palace — arched verandahs, and Kolhapur at your doorstep.",
+      "about": "Shahu Palace sits where the city's old quarter begins, a short walk from the palace gates and the famous Mahalaxmi temple. The building itself is a century of Kolhapur in miniature: teak doors, jaali balconies, courtyards that catch the morning sun. Our rooms have been restored with a light hand — original plaster and brass alongside modern baths and deep mattresses. The kitchen serves a Kolhapuri thali that locals queue for, and guests simply walk downstairs.",
+      "menu_key": "default",
+      "room_types": [
+        {
+          "name": "Standard",
+          "price": 2800,
+          "total": 10,
+          "images": ["/static/img/room-standard-2.jpg", "/static/img/room-standard-1.jpg"],
+          "desc": "Heritage charm at its simplest — high ceilings, cool floors and a window onto the courtyard.",
+          "amenities": ["Free Wi-Fi", "Air conditioning", "Heritage interiors", "Hot water", "Breakfast"]
+        },
+        {
+          "name": "Deluxe",
+          "price": 4800,
+          "total": 6,
+          "images": ["/static/img/room-deluxe-2.jpg", "/static/img/room-deluxe-1.jpg"],
+          "desc": "Carved balcony, king bed and the quiet of the old wing — our most requested room.",
+          "amenities": ["King bed", "Private balcony", "Minibar", "Work desk", "Breakfast", "Evening tea"]
+        },
+        {
+          "name": "Suite",
+          "price": 8500,
+          "total": 3,
+          "images": ["/static/img/room-suite-2.jpg", "/static/img/room-suite-1.jpg"],
+          "desc": "The old wing's finest — a parlour, a four-poster bed and a balcony over Ramling Road.",
+          "amenities": ["Separate parlour", "Four-poster bed", "Bathtub", "Complimentary dinner", "Butler service", "Late checkout"]
+        }
+      ]
+    },
+    {
+      "slug": "panhala-fort-retreat",
+      "name": "Panhala Fort Retreat",
+      "city": "Panhala",
+      "category": "Resort",
+      "tagline": "A hill above the Sahyadris",
+      "address": "Vijaydurg Road, Panhala, Maharashtra 416201",
+      "phone": "+91 230 268 4400",
+      "email": "stay@panhalaretreat.in",
+      "hours": "Front desk 24×7 · Kitchen 7:00 AM – 10:30 PM",
+      "rating": 4.6,
+      "reviews": 604,
+      "dine_label": "₹400–700 per person · Hill station café",
+      "image": "/static/img/hotel-panhala.jpg",
+      "description": "A hill retreat above the old ramparts, where fort sunrises and slow mornings share a verandah.",
+      "about": "Forty minutes from Kolhapur, the road to Panhala climbs through mango orchards and mist. The Retreat sits just below the old fort walls, where dawn arrives with paragliders and the smell of wet earth. Rooms are stone and timber, each with a verandah facing the valley; the kitchen leans local — misal at breakfast, mutton at night, and coffee that earns the sunrise. Walk the ramparts at dusk, then come back to a fire in the courtyard.",
+      "menu_key": "default",
+      "room_types": [
+        {
+          "name": "Standard",
+          "price": 3200,
+          "total": 14,
+          "images": ["/static/img/room-standard-1.jpg", "/static/img/room-standard-2.jpg"],
+          "desc": "Stone-walled and snug, with a valley-facing window and a kettle that's always warm.",
+          "amenities": ["Free Wi-Fi", "Heater", "Valley view", "Hot water", "Breakfast", "Bonfire access"]
+        },
+        {
+          "name": "Deluxe",
+          "price": 5600,
+          "total": 9,
+          "images": ["/static/img/room-deluxe-1.jpg", "/static/img/room-deluxe-2.jpg"],
+          "desc": "A private verandah, a king bed, and the Sahyadris performing at every hour of light.",
+          "amenities": ["King bed", "Private verandah", "Valley view", "Minibar", "Breakfast", "Evening tea"]
+        },
+        {
+          "name": "Suite",
+          "price": 9800,
+          "total": 4,
+          "images": ["/static/img/room-suite-1.jpg", "/static/img/room-suite-2.jpg"],
+          "desc": "Our corner suites wrap the view — living room, bath with a view, and a fire below.",
+          "amenities": ["Corner living room", "Panoramic view", "Bathtub", "Complimentary dinner", "Butler service", "Late checkout"]
+        }
+      ]
+    },
+    {
+      "slug": "the-riverside-inn",
+      "name": "The Riverside Inn",
+      "city": "Kolhapur",
+      "category": "Business",
+      "tagline": "Business-ready on the Bhogawati",
+      "address": "Tarabai Park, Bhogawati River Road, Kolhapur, Maharashtra 416005",
+      "phone": "+91 231 265 7700",
+      "email": "stay@riversideinn.in",
+      "hours": "Front desk 24×7 · Breakfast 6:30 – 10:30 AM",
+      "rating": 4.3,
+      "reviews": 1105,
+      "dine_label": "₹350–600 per person · All-day dining",
+      "image": "/static/img/hotel-riverside.jpg",
+      "description": "Crisp, contemporary rooms on the river — ten minutes from the station, zero noise from the city.",
+      "about": "The Riverside Inn was built for people with early trains and late meetings, but it refuses to feel like an office. Glass walls face the Bhogawati, the lobby smells of filter coffee, and every room is engineered for sleep: blackout curtains, silent air-conditioning, a bed that means it. Downstairs, the all-day café serves everything from a Kolhapuri breakfast to a midnight sandwich. Parking, printers and a boardroom — all present, none of it showy.",
+      "menu_key": "default",
+      "room_types": [
+        {
+          "name": "Standard",
+          "price": 2600,
+          "total": 16,
+          "images": ["/static/img/room-standard-2.jpg", "/static/img/room-standard-1.jpg"],
+          "desc": "Everything a working night needs: a proper desk, fast Wi-Fi and perfect silence.",
+          "amenities": ["Free Wi-Fi", "Work desk", "Blackout curtains", "43\" TV", "Breakfast", "Laundry"]
+        },
+        {
+          "name": "Deluxe",
+          "price": 4400,
+          "total": 10,
+          "images": ["/static/img/room-deluxe-2.jpg", "/static/img/room-deluxe-1.jpg"],
+          "desc": "River-facing glass, a king bed and a lounge chair for the ones who made their deadline.",
+          "amenities": ["King bed", "River view", "Minibar", "Lounge chair", "Breakfast", "Early breakfast box"]
+        },
+        {
+          "name": "Suite",
+          "price": 7900,
+          "total": 5,
+          "images": ["/static/img/room-suite-2.jpg", "/static/img/room-suite-1.jpg"],
+          "desc": "A suite that works as hard as you do — meeting nook, deep bath, river on both sides.",
+          "amenities": ["Meeting nook", "Separate living area", "Bathtub", "Complimentary dinner", "Butler service", "Late checkout"]
+        }
+      ]
+    },
+    {
+      "slug": "vasant-villa-resort",
+      "name": "Vasant Villa Resort",
+      "city": "Kolhapur",
+      "category": "Resort",
+      "tagline": "Garden villas & a long blue pool",
+      "address": "Gokul Shirgaon, Kolhapur, Maharashtra 416137",
+      "phone": "+91 230 246 9900",
+      "email": "stay@vasantvillas.in",
+      "hours": "Front desk 24×7 · Pool 7:00 AM – 9:00 PM",
+      "rating": 4.4,
+      "reviews": 458,
+      "dine_label": "₹400–650 per person · Garden restaurant",
+      "image": "/static/img/hotel-vasant.jpg",
+      "description": "Villas in a frangipani garden, a long pool, and evenings that end by the water.",
+      "about": "Ten minutes off the highway, Vasant Villa feels a world away — cream stone villas scattered through a garden of frangipani and palm, a pool that runs the length of the lawn, and a restaurant where dinner is served under string lights. Weekends bring families; weekdays bring people who finally switched their phones off. Every villa has its own sit-out, and the staff learn your coffee order by day two.",
+      "menu_key": "default",
+      "room_types": [
+        {
+          "name": "Standard",
+          "price": 3000,
+          "total": 12,
+          "images": ["/static/img/room-standard-1.jpg", "/static/img/room-standard-2.jpg"],
+          "desc": "A garden-facing room with a sit-out — mornings here begin with birds, not alarms.",
+          "amenities": ["Free Wi-Fi", "Air conditioning", "Garden view", "Sit-out", "Breakfast", "Pool access"]
+        },
+        {
+          "name": "Deluxe",
+          "price": 5200,
+          "total": 8,
+          "images": ["/static/img/room-deluxe-1.jpg", "/static/img/room-deluxe-2.jpg"],
+          "desc": "Poolside luxury with a private deck, daybed and the water ten steps away.",
+          "amenities": ["King bed", "Private deck", "Pool view", "Minibar", "Breakfast", "Evening tea"]
+        },
+        {
+          "name": "Suite",
+          "price": 9200,
+          "total": 4,
+          "images": ["/static/img/room-suite-1.jpg", "/static/img/room-suite-2.jpg"],
+          "desc": "A villa to yourself — plunge pool, lawn, and a chef who cooks for your table alone.",
+          "amenities": ["Private villa", "Plunge pool", "Bathtub", "Private chef on request", "Butler service", "Late checkout"]
+        }
+      ]
+    }
+  ]
+}

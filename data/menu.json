@@ -1,0 +1,22 @@
+{
+  "tandoor-corner": [
+    {"id": "tc1", "name": "Butter Chicken", "price": 485, "img": "/static/img/food-butter-chicken.jpg", "tag": "House Favourite", "desc": "Tender grilled chicken simmered in butter, cream, tomato & fenugreek."},
+    {"id": "tc2", "name": "Tandoori Chicken", "price": 360, "img": "/static/img/food-tandoori-chicken.jpg", "tag": "From the Clay Oven", "desc": "Half chicken, charred and smoky, served with onion & lemon."},
+    {"id": "tc3", "name": "Chicken Tangdi Kebab", "price": 440, "img": null, "tag": "Signature", "desc": "Slow-marinated drumlets grilled over open fire, with mint chutney."},
+    {"id": "tc4", "name": "Garlic Naan", "price": 110, "img": "/static/img/food-garlic-naan.jpg", "tag": "Fresh from Tandoor", "desc": "Puffed, blistered and brushed with garlic butter."},
+    {"id": "tc5", "name": "Mutton Seekh Kebab", "price": 420, "img": "/static/img/food-seekh-kebab.jpg", "tag": "Grills", "desc": "Hand-minced mutton, skewered and grilled, spiced just right."},
+    {"id": "tc6", "name": "Hyderabadi Mutton Biryani", "price": 520, "img": null, "tag": "Biryani", "desc": "Sealed dum basmati layered with spiced mutton, served with raita."},
+    {"id": "tc7", "name": "Dal Makhani", "price": 290, "img": null, "tag": "Vegetarian", "desc": "Black lentils simmered overnight with butter and cream."},
+    {"id": "tc8", "name": "Sweet Lassi", "price": 120, "img": null, "tag": "Drinks", "desc": "Thick, chilled and topped with a spoon of malai."}
+  ],
+  "default": [
+    {"id": "df1", "name": "Butter Chicken", "price": 460, "img": "/static/img/food-butter-chicken.jpg", "tag": "House Favourite", "desc": "Tender chicken in a silky tomato-butter gravy."},
+    {"id": "df2", "name": "Tandoori Chicken", "price": 340, "img": "/static/img/food-tandoori-chicken.jpg", "tag": "Clay Oven", "desc": "Yogurt-marinated, charred, unmistakable."},
+    {"id": "df3", "name": "Chicken Tangdi Kebab", "price": 420, "img": "/static/img/food-tangdi-kebab.jpg", "tag": "Signature", "desc": "Juicy drumlets off the grill with mint chutney."},
+    {"id": "df4", "name": "Garlic Naan", "price": 100, "img": "/static/img/food-garlic-naan.jpg", "tag": "Bread", "desc": "Buttery, garlicky, straight from the tandoor."},
+    {"id": "df5", "name": "Paneer Tikka", "price": 340, "img": null, "tag": "Vegetarian", "desc": "Charred cottage cheese, peppers and mint."},
+    {"id": "df6", "name": "Kolhapuri Chicken Sukka", "price": 460, "img": null, "tag": "Local Special", "desc": "Dry-fried with coconut and the famous Kolhapuri masala."},
+    {"id": "df7", "name": "Veg Kolhapuri", "price": 300, "img": null, "tag": "Vegetarian", "desc": "Seasonal vegetables in a fiery, fragrant gravy."},
+    {"id": "df8", "name": "Masala Chai", "price": 90, "img": null, "tag": "Drinks", "desc": "Slow-boiled with ginger and cardamom."}
+  ]
+}

@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}Find your stay{% endblock %}
+
+{% block content %}
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="hero-media" data-parallax="0.22">
+    <img src="/static/img/hero.jpg" alt="Luxurious hotel lobby at dusk" fetchpriority="high">
+  </div>
+  <div class="hero-veil"></div>
+
+  <div class="hero-inner">
+    <div class="hero-copy" data-parallax="-0.08">
+      <span class="eyebrow">Kolhapur · Panhala · Maharashtra</span>
+      <h1 class="display-1">Every stay<br><em class="gold">tells a tale.</em></h1>
+      <p class="lead">Search five handpicked hotels, hold a room in seconds, pay only when you're ready —
+        and order the feast online for delivery, or reserve your table downstairs.</p>
+
+      <form class="search-card" id="searchForm">
+        <div class="search-field">
+          <label for="q">Destination</label>
+          <input id="q" name="q" type="search" placeholder="Hotel, city or locality…" autocomplete="off">
+        </div>
+        <div class="search-field">
+          <label for="checkIn">Check in</label>
+          <input id="checkIn" name="check_in" type="date">
+        </div>
+        <div class="search-field">
+          <label for="checkOut">Check out</label>
+          <input id="checkOut" name="check_out" type="date">
+        </div>
+        <div class="search-field">
+          <label for="guests">Guests</label>
+          <select id="guests" name="guests">
+            <option value="1">1 guest</option>
+            <option value="2" selected>2 guests</option>
+            <option value="3">3 guests</option>
+            <option value="4">4 guests</option>
+            <option value="5">5 guests</option>
+            <option value="6">6 guests</option>
+          </select>
+        </div>
+        <button class="btn btn-gold" type="submit">Search ✦</button>
+      </form>
+
+      <div class="hero-awards">
+        <div class="award"><b>4.4</b> avg. guest rating</div>
+        <div class="award"><b>120</b> rooms across 5 stays</div>
+        <div class="award"><b>24×7</b> front desk</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue"><span>Begin the search</span><span class="line"></span></div>
+</section>
+
+<!-- ================= MARQUEE ================= -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marqueeTrack">
+    <span>Search <i>✦</i> Reserve <i>✦</i> Pay <i>✦</i> Dine <i>✦</i> Unwind <i>✦</i> Repeat <i>✦</i></span>
+    <span>Standard <i>✦</i> Deluxe <i>✦</i> Suite <i>✦</i> Butter Chicken <i>✦</i> Tandoor <i>✦</i> Late Checkout <i>✦</i></span>
+  </div>
+</div>
+
+<!-- ================= STAYS / SEARCH RESULTS ================= -->
+<section class="section" id="stays">
+  <div class="container">
+    <div class="section-head row">
+      <div>
+        <span class="eyebrow">The Collection</span>
+        <h2 class="display-2" style="margin-top:14px">Stays worth <em class="gold">arriving</em> for.</h2>
+      </div>
+      <p class="lead" id="resultsNote" style="max-width:34ch">Every room shows live reserved &amp; booked counts — no surprises at check-in.</p>
+    </div>
+
+    <div class="filters" id="filters"></div>
+    <div class="hotel-grid" id="hotelGrid">
+      <div class="small" style="grid-column:1/-1;text-align:center;padding:60px 0">Loading stays…</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3D FAN ================= -->
+<section class="fan" id="fanSection">
+  <div class="fan-sticky">
+    <div class="fan-copy">
+      <span class="eyebrow center">The Vilas Standard</span>
+      <h2 class="display-2">Three promises, <em class="gold">kept.</em></h2>
+    </div>
+    <div class="fan-stage" id="fanStage">
+      <figure class="fan-card" data-fan="0">
+        <img src="/static/img/room-deluxe-1.jpg" alt="Deluxe room with city view">
+        <figcaption><b>Rooms with a view</b><span>Standard · Deluxe · Suite — kept immaculate</span></figcaption>
+      </figure>
+      <figure class="fan-card" data-fan="1">
+        <img src="/static/img/food-tandoori-chicken.jpg" alt="Tandoori chicken platter">
+        <figcaption><b>Kitchens that stay lit</b><span>Order in-room, delivered or dined in</span></figcaption>
+      </figure>
+      <figure class="fan-card" data-fan="2">
+        <img src="/static/img/hotel-palace.jpg" alt="Heritage hotel facade">
+        <figcaption><b>Addresses with soul</b><span>Heritage, business &amp; resort stays</span></figcaption>
+      </figure>
+      <figure class="fan-card" data-fan="3">
+        <img src="/static/img/room-suite-1.jpg" alt="Opulent suite">
+        <figcaption><b>Suites that linger</b><span>Separate living, deep baths, late checkout</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= OCCUPANCY / MANAGE ================= -->
+<section class="section" id="occupancy">
+  <div class="container">
+    <div class="section-head row">
+      <div>
+        <span class="eyebrow">Live Occupancy</span>
+        <h2 class="display-2" style="margin-top:14px">How many rooms are <em class="gold">reserved</em> &amp; <em class="gold">booked</em>.</h2>
+        <p class="lead" style="margin-top:14px">The manage board — open to every visitor. Amber rooms are held without payment;
+          green rooms are paid &amp; confirmed.</p>
+      </div>
+      <div class="legend">
+        <span class="chip reserved"><span class="dot"></span> Reserved — held, unpaid</span>
+        <span class="chip booked"><span class="dot"></span> Booked — paid &amp; confirmed</span>
+        <span class="chip free"><span class="dot"></span> Available</span>
+      </div>
+    </div>
+
+    <div class="board" id="occBoard" data-reveal>
+      <div class="board-scroll">
+        <table class="occ">
+          <thead>
+            <tr>
+              <th>Hotel</th>
+              <th>Standard <span class="tiny" style="letter-spacing:.05em">res / bk / free</span></th>
+              <th>Deluxe <span class="tiny" style="letter-spacing:.05em">res / bk / free</span></th>
+              <th>Suite <span class="tiny" style="letter-spacing:.05em">res / bk / free</span></th>
+              <th>Totals</th>
+            </tr>
+          </thead>
+          <tbody id="occBody">
+            <tr><td colspan="5" class="small" style="text-align:center;padding:40px">Reading live availability…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT US ================= -->
+<section class="section" id="about" style="background:linear-gradient(180deg, transparent, rgba(17,28,49,.5), transparent)">
+  <div class="container about-grid">
+    <div class="about-media" data-reveal="left">
+      <div class="frame">
+        <img src="/static/img/about-interior.jpg" data-fallback="/static/img/hotel-tandoor.jpg"
+             alt="Warm restaurant interior beneath brass lamps">
+      </div>
+      <div class="stamp">Est.<br>2026<br>✦ Vilas ✦</div>
+    </div>
+
+    <div class="about-copy" data-reveal="right">
+      <span class="eyebrow">About Us</span>
+      <h2 class="display-2">A word that means <em class="gold">a tale.</em></h2>
+      <p>Vilas began with a simple idea — booking a room should feel as good as arriving at one.
+        We curate a handful of stays in and around Kolhapur: a heritage kitchen where the tandoor is lit
+        before sunrise, a palace wing with carved balconies, a hill retreat above Panhala's ramparts.</p>
+      <p>Every reservation here is transparent: you can <b style="color:var(--cream);font-weight:400">hold a room without paying</b>,
+        see exactly how many rooms are reserved and booked across the property, and settle up with a
+        simulated payment whenever you're ready. Cancel anytime — the room returns to the pool instantly.</p>
+      <p>And because a stay is half the story, you can order dinner from any hotel's kitchen —
+        delivered to your door, or booked for the table with a date and time of your choosing.</p>
+
+      <div class="stats">
+        <div class="stat"><b data-count="5">0</b><span>Partner hotels</span></div>
+        <div class="stat"><b data-count="120">0</b><span>Rooms managed</span></div>
+        <div class="stat"><b data-count="4.4" data-decimals="1">0</b><span>Avg. rating</span></div>
+        <div class="stat"><b data-count="2400" data-suffix="+">0</b><span>Guests hosted</span></div>
+      </div>
+
+      <div style="margin-top:34px;display:flex;gap:14px;flex-wrap:wrap">
+        <a class="btn btn-gold" href="#stays">Start searching</a>
+        <a class="btn btn-ghost" href="/auth">Create an account</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="section" style="padding-top:20px">
+  <div class="container">
+    <div class="avail-panel" style="text-align:center" data-reveal>
+      <span class="eyebrow center">Your table &amp; your room await</span>
+      <h2 class="display-2" style="margin:16px 0 14px">Two ways to <em class="gold">taste the tale.</em></h2>
+      <p class="lead" style="margin:0 auto 30px">Reserve a room for the night, or reserve a table for the feast —
+        sometimes both, in the same building.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <a class="btn btn-gold" href="#stays">Book a room</a>
+        <a class="btn btn-ghost" href="/hotel/tandoor-corner#dining">Order food online</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block pagescript %}
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock %}

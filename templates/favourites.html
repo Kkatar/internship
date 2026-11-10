@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Favourites{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow">Saved Stays</span>
+    <h1 class="display-1">Your <em class="gold">favourites.</em></h1>
+    <p class="lead">The addresses you'd return to — kept in one place.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:44px">
+  <div class="container">
+    <div id="signedOut" class="empty-state" style="display:none">
+      <div class="big">♥</div>
+      <h3>Sign in to see your favourites</h3>
+      <p>Hearts you tap while browsing are saved to your account.</p>
+      <a class="btn btn-gold" href="/auth?next=/favourites">Sign in / create account</a>
+    </div>
+
+    <div id="empty" class="empty-state" style="display:none">
+      <div class="big">♡</div>
+      <h3>Nothing saved yet</h3>
+      <p>Tap the heart on any stay to keep it here for later.</p>
+      <a class="btn btn-gold" href="/#stays">Browse stays</a>
+    </div>
+
+    <div class="hotel-grid" id="favGrid" style="display:none"></div>
+  </div>
+</section>
+{% endblock %}
+
+{% block pagescript %}
+<script src="{{ url_for('static', filename='js/favourites.js') }}"></script>
+{% endblock %}

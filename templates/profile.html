@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}My bookings{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow">Guest Area</span>
+    <h1 class="display-1">My <em class="gold">bookings.</em></h1>
+    <p class="lead">Every hold, payment, cancellation and feast — in one ledger.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:44px">
+  <div class="container">
+    <!-- signed-out state -->
+    <div id="signedOut" class="empty-state" style="display:none">
+      <div class="big">✦</div>
+      <h3>The ledger needs a name</h3>
+      <p>Sign in to see your reservations, payments and food orders.</p>
+      <a class="btn btn-gold" href="/auth?next=/profile">Sign in / create account</a>
+    </div>
+
+    <div id="profileView" style="display:none">
+      <div class="profile-top">
+        <div class="profile-card" data-reveal>
+          <div class="profile-id">
+            <div class="profile-avatar" id="pAvatar">V</div>
+            <div>
+              <h2 id="pName">…</h2>
+              <div class="mail" id="pMail"></div>
+              <div class="tiny" id="pSince" style="margin-top:6px"></div>
+            </div>
+          </div>
+          <div class="profile-fields">
+            <div class="field"><label for="pPhone">Phone</label><input id="pPhone" placeholder="+91 …"></div>
+            <div class="field" style="justify-content:flex-end">
+              <button class="btn btn-ghost btn-sm" id="saveProfile" style="height:50px">Save profile</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-panel" data-reveal style="--d:.1s">
+          <div class="mini-stat"><b id="stBooked">0</b><span>Booked &amp; paid</span></div>
+          <div class="mini-stat"><b id="stReserved">0</b><span>Reserved (unpaid)</span></div>
+          <div class="mini-stat"><b id="stOrders">0</b><span>Food orders</span><small id="stSpend"></small></div>
+          <div class="mini-stat"><b id="stFavs">0</b><span>Favourites</span></div>
+        </div>
+      </div>
+
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-tab="res">Reservations</button>
+        <button class="tab" data-tab="orders">Food orders</button>
+        <button class="tab" data-tab="data">Data &amp; export</button>
+      </div>
+
+      <div id="tab-res">
+        <div class="booking-list" id="bookingList"><p class="small">Loading reservations…</p></div>
+      </div>
+
+      <div id="tab-orders" style="display:none">
+        <div class="booking-list" id="orderList"><p class="small">Loading orders…</p></div>
+      </div>
+
+      <div id="tab-data" style="display:none">
+        <div class="avail-panel">
+          <span class="eyebrow">Your data</span>
+          <h3 class="display-3" style="margin:12px 0 8px">Take the ledger with you.</h3>
+          <p class="lead" style="margin-bottom:22px">Exports every reservation &amp; order as JSON — written to the server's
+            <code style="color:var(--gold-2)">exports/</code> folder and downloaded to your device.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <a class="btn btn-gold" href="/api/export/bookings">Download bookings.json</a>
+            <button class="btn btn-ghost" id="signOutBtn">Sign out</button>
+          </div>
+          <p class="form-note" style="margin-top:18px">Accounts are stored with PBKDF2-hashed passwords; every hold, payment,
+            cancellation and order is appended to <code style="color:var(--gold-2)">data/audit.jsonl</code>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAY MODAL (re-used on profile) ============ -->
+<div class="modal-root" id="payModal">
+  <div class="modal-backdrop"></div>
+  <div class="modal">
+    <button class="modal-close" data-close>✕</button>
+    <span class="eyebrow">Simulated payment</span>
+    <h3 style="margin-top:12px">Confirm your booking</h3>
+    <p class="sub">Demo gateway — no real money. Card <b style="color:var(--gold-2)">4242 4242 4242 4242</b>, any future
+      expiry, any CVV.</p>
+    <div class="summary-box" id="pSummary"></div>
+    <div class="seg" id="payMethods">
+      <button type="button" class="active" data-m="card">Card</button>
+      <button type="button" data-m="upi">UPI</button>
+      <button type="button" data-m="wallet">Wallet</button>
+    </div>
+    <form id="payForm">
+      <div id="payCardFields">
+        <div class="field"><label for="pNum">Card number</label>
+          <input id="pNum" inputmode="numeric" placeholder="4242 4242 4242 4242" maxlength="19"></div>
+        <div class="field"><label for="pName">Name on card</label><input id="pName" placeholder="YOUR NAME"></div>
+        <div class="field-row">
+          <div class="field"><label for="pExp">Expiry</label><input id="pExp" placeholder="MM/YY" maxlength="5"></div>
+          <div class="field"><label for="pCvv">CVV</label><input id="pCvv" inputmode="numeric" placeholder="123" maxlength="4"></div>
+        </div>
+      </div>
+      <div id="payUpiFields" style="display:none">
+        <div class="field"><label for="pUpi">UPI ID</label><input id="pUpi" placeholder="yourname@okhdfc"></div>
+      </div>
+      <div id="payWalletFields" style="display:none">
+        <div class="field"><label for="pWallet">Wallet</label>
+          <select id="pWallet"><option>Vilas Wallet — ₹ balance 5,000</option><option>Food Wallet — ₹ balance 1,200</option></select>
+        </div>
+      </div>
+      <button class="btn btn-gold btn-block" type="submit" id="paySubmit">Simulate payment</button>
+      <p class="form-note" style="text-align:center;margin-top:12px">🔒 Simulated gateway · nothing is charged</p>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block pagescript %}
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+{% endblock %}

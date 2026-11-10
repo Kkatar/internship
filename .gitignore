@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Runtime data & logs
+data/vilas.db
+data/audit.jsonl
+exports/*.json
+
+# Node / QA tooling (dev only)
+node_modules/
+package.json
+package-lock.json
+.cache/
+.npm/
+.npx/
+
+# Secrets & machine state
+.ssh/
+.sudo_as_admin_successful
+
+# QA artifacts
+qa/
+image-search/
+uploads/
+
+# OS / editor
+.DS_Store
+*.log
