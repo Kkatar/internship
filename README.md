@@ -14,15 +14,28 @@ Search stays, hold a room without paying, watch the live **reserved vs booked** 
 - **Food ordering** — online: delivery address + payment method · offline: dine-in date & time + party size (`ORD-XXXXXX`)
 - **Profile** — bookings ledger (booked/reserved/spent/orders), pay or cancel inline, booking details, export bookings as JSON, food orders tab
 - **Favourites** — hearts on every stay
-- **Auth** — email + password (PBKDF2 hashing). Demo account: `demo@vilas.com` / `demo123` (pre-loaded with reservations in every state + food orders)
+- **Auth** — email + password. When `SUPABASE_*` is configured, accounts live in **Supabase Auth** (else PBKDF2 in SQLite). Demo account: `demo@vilas.com` / `demo123` (pre-loaded with reservations in every state + orders in Supabase)
 - **Classy 3D scroll experience** — parallax hero, scroll-progress bar, pinned 3D fan, scroll-reveals, counters, marquees (Playfair Display + Jost, all assets local)
 
 ## Stack
 
 - **Backend:** Python + Flask, OOP domain layer (`backend/models.py` — `Database`, `User`, `Hotel`, `RoomType`, `Reservation`, `Payment`, `FoodOrder`, `Favourite`, `Exporter`, `AuditLog`)
-- **Database:** SQLite (`data/vilas.db`, created by the seed script)
+- **Storage split:** SQLite (`data/vilas.db`) keeps the booking engine — hotels, reservations, payments, occupancy. **Supabase** keeps **auth (Supabase Auth), favourites and food orders** (Postgres tables `vilas_favourites` / `vilas_food_orders`, RLS owner-only) via a stdlib-only REST client (`backend/supabase_client.py`, `backend/sbstore.py`). When the `SUPABASE_*` variables are absent the app falls back to the SQLite implementation, so a fresh clone still runs out of the box.
 - **File I/O:** `data/hotels.json` + `data/menu.json` seeds, `data/audit.jsonl` append-only audit log, `exports/*.json` booking downloads
 - **Frontend:** Jinja templates + vanilla JS, local fonts & images (offline-safe)
+
+## Connect Supabase (login · favourites · orders)
+
+1. Create a project at supabase.com (or use the connector).
+2. Apply the migration (or run the SQL): tables `public.vilas_favourites(user_id uuid → auth.users, hotel_slug text, created_at, PK(user_id, hotel_slug))` and `public.vilas_food_orders(id uuid PK, code text UNIQUE, user_id uuid → auth.users, hotel_slug text, type text, items jsonb, total numeric, status text, address text, payment_method text, paid boolean, dining_date date, dining_time text, guests int, created_at timestamptz)`, both with RLS enabled and owner policies (`auth.uid() = user_id`).
+3. Copy `.env.example` to `.env` and fill in:
+   - `SUPABASE_URL` — e.g. `https://<ref>.supabase.co`
+   - `SUPABASE_ANON_KEY` — anon/publishable key (password grant)
+   - `SUPABASE_SERVICE_KEY` — service_role key; **server-side only**, bypasses RLS; never commit it (`.env` is gitignored)
+4. Demo users (`demo@vilas.com`/`demo123`, `arjun@vilas.com`/`password123`, `priya@vilas.com`/`password123`) exist in Supabase Auth for this deployment; reservations bridging is by email, so SQLite booking history is preserved.
+5. Restart the app — `/api/auth/login` now returns `{"store":"supabase"}`, and `/api/me` returns order/favourite counters from Postgres.
+
+Row Level Security is enabled on both tables; the app accesses them with the service key server-side, scoped by the authenticated UUID.
 
 ## Run locally
 

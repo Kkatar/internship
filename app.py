@@ -12,6 +12,17 @@ all card/UPI/wallet flows are simulations.
 from __future__ import annotations
 
 import os
+
+# Load .env (KEY=VALUE lines) if present — kept dependency-free on purpose.
+_ENV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+if os.path.exists(_ENV_PATH):
+    with open(_ENV_PATH, encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, value = line.split("=", 1)
+                os.environ.setdefault(key.strip(), value.strip())
+
 from functools import wraps
 
 from flask import (
@@ -35,8 +46,10 @@ from backend.models import (
     Hotel,
     Reservation,
     User,
+    now_iso,
 )
 from backend.seed import seed
+from backend import sbstore, supabase_client as sb
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -58,6 +71,27 @@ def current_user() -> User | None:
 
 def unauth():
     return jsonify({"error": "Please sign in to continue."}), 401
+
+
+def sb_uid() -> str | None:
+    return session.get("sb_uid")
+
+
+def use_sb() -> bool:
+    """True when the request is bound to a Supabase-authenticated user."""
+    return sb.is_configured() and bool(sb_uid())
+
+
+def fav_slug_set(user) -> set:
+    """Favourite hotel slugs for the current user, from Supabase when wired."""
+    if not user:
+        return set()
+    if use_sb():
+        try:
+            return set(sbstore.fav_slugs(sb_uid()))
+        except sb.SupabaseError:
+            return set()
+    return Favourite.slugs(db, user.id)
 
 
 def api(fn):
@@ -123,7 +157,27 @@ def signout():
 @api
 def api_register():
     p = json_body()
-    user = User.register(db, p.get("name"), p.get("email"), p.get("password"), p.get("phone", ""))
+    email = (p.get("email") or "").strip().lower()
+    password = p.get("password") or ""
+    name = (p.get("name") or "").strip()
+    phone = (p.get("phone") or "").strip()
+    if sb.is_configured():
+        if len(name) < 2:
+            raise ValueError("Please tell us your name.")
+        if "@" not in email or len(email) < 5:
+            raise ValueError("Enter a valid email address.")
+        if len(password) < 6:
+            raise ValueError("Password must be at least 6 characters.")
+        try:
+            sb_user = sb.auth_signup(name, email, password, phone)
+        except sb.SupabaseError as exc:
+            raise ValueError(str(exc))
+        uid = sbstore.ensure_sqlite_user(db, sb_user)
+        session.clear()
+        session["uid"] = uid
+        session["sb_uid"] = sb_user.get("id")
+        return jsonify({"user": User.by_id(db, uid).to_dict(), "store": "supabase"}), 201
+    user = User.register(db, name, email, password, phone)
     session["uid"] = user.id
     return jsonify({"user": user.to_dict()}), 201
 
@@ -132,6 +186,21 @@ def api_register():
 @api
 def api_login():
     p = json_body()
+    if sb.is_configured():
+        email = (p.get("email") or "").strip().lower()
+        password = p.get("password") or ""
+        if not email or not password:
+            raise ValueError("Enter your email and password.")
+        try:
+            token = sb.auth_login(email, password)
+        except sb.SupabaseError as exc:
+            raise ValueError(str(exc))
+        sb_user = token["user"]
+        uid = sbstore.ensure_sqlite_user(db, sb_user)
+        session.clear()
+        session["uid"] = uid
+        session["sb_uid"] = sb_user.get("id")
+        return jsonify({"user": User.by_id(db, uid).to_dict(), "store": "supabase"})
     user = User.authenticate(db, p.get("email"), p.get("password"))
     session["uid"] = user.id
     return jsonify({"user": user.to_dict()})
@@ -146,9 +215,15 @@ def api_logout():
 @app.get("/api/me")
 def api_me():
     user = current_user()
+    stats = user.stats() if user else None
+    if user and use_sb():
+        try:
+            stats = sbstore.merge_stats(db, stats, sb_uid())
+        except sb.SupabaseError:
+            pass  # keep the SQLite counters if Supabase is momentarily down
     return jsonify({
         "user": user.to_dict() if user else None,
-        "stats": user.stats() if user else None,
+        "stats": stats,
     })
 
 
@@ -170,7 +245,7 @@ def api_update_profile():
 @api
 def api_hotels():
     user = current_user()
-    favs = Favourite.slugs(db, user.id) if user else set()
+    favs = fav_slug_set(user)
     hotels = []
     for h in Hotel.search(db, request.args.get("q", ""), request.args.get("category", "")):
         d = h.to_dict()
@@ -272,6 +347,8 @@ def api_favourites():
     user = current_user()
     if not user:
         return unauth()
+    if use_sb():
+        return jsonify({"hotels": sbstore.fav_list(db, sb_uid())})
     return jsonify({"hotels": Favourite.list(db, user.id)})
 
 
@@ -281,7 +358,11 @@ def api_add_favourite():
     user = current_user()
     if not user:
         return unauth()
-    Favourite.add(db, user.id, json_body().get("slug", ""))
+    slug = json_body().get("slug", "")
+    if use_sb():
+        sbstore.fav_add(db, sb_uid(), slug)
+    else:
+        Favourite.add(db, user.id, slug)
     return jsonify({"ok": True})
 
 
@@ -291,7 +372,10 @@ def api_remove_favourite(slug):
     user = current_user()
     if not user:
         return unauth()
-    Favourite.remove(db, user.id, slug)
+    if use_sb():
+        sbstore.fav_remove(sb_uid(), slug)
+    else:
+        Favourite.remove(db, user.id, slug)
     return jsonify({"ok": True})
 
 
@@ -305,7 +389,10 @@ def api_create_order():
     if not user:
         return unauth()
     p = json_body()
-    order = FoodOrder.create(db, user.id, p.get("hotel_slug", ""), p)
+    if use_sb():
+        order = sbstore.order_create(db, sb_uid(), p.get("hotel_slug", ""), p)
+    else:
+        order = FoodOrder.create(db, user.id, p.get("hotel_slug", ""), p)
     return jsonify({"order": order}), 201
 
 
@@ -315,6 +402,8 @@ def api_my_orders():
     user = current_user()
     if not user:
         return unauth()
+    if use_sb():
+        return jsonify({"orders": sbstore.orders_for_user(db, sb_uid())})
     return jsonify({"orders": FoodOrder.for_user(db, user.id)})
 
 
@@ -327,7 +416,27 @@ def api_export_bookings():
     user = current_user()
     if not user:
         return unauth()
-    data = Exporter.bookings(db, user)
+    if use_sb():
+        import json
+        suid = sb_uid()
+        stats = sbstore.merge_stats(db, user.stats(), suid)
+        data = {
+            "exported_at": now_iso(),
+            "guest": user.to_dict(),
+            "stats": stats,
+            "reservations": Reservation.for_user(db, user.id),
+            "orders": sbstore.orders_for_user(db, suid),
+            "store": "supabase",
+        }
+        os.makedirs(EXPORT_DIR, exist_ok=True)
+        import datetime as dt
+        stamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+        filename = f"bookings-{user.id}-{stamp}.json"
+        with open(os.path.join(EXPORT_DIR, filename), "w", encoding="utf-8") as fh:
+            json.dump(data, fh, ensure_ascii=False, indent=2)
+        data["file"] = filename
+    else:
+        data = Exporter.bookings(db, user)
     path = os.path.join(EXPORT_DIR, data["file"])
     return send_file(path, as_attachment=True, download_name=data["file"],
                      mimetype="application/json")

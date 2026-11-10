@@ -29,3 +29,6 @@ uploads/
 # OS / editor
 .DS_Store
 *.log
+
+# Local secrets
+.env
