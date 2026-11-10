@@ -58,7 +58,7 @@ app.secret_key = os.environ.get("SECRET_KEY", "vilas-dev-secret-change-me")
 
 db = Database(DB_PATH)
 db.init_schema()
-seed(db)
+seed(db, include_orders=not sb.is_configured())
 
 
 # --------------------------------------------------------------------------
@@ -247,7 +247,7 @@ def api_hotels():
     user = current_user()
     favs = fav_slug_set(user)
     hotels = []
-    for h in Hotel.search(db, request.args.get("q", ""), request.args.get("category", "")):
+    for h in Hotel.search_enriched(db, request.args.get("q", ""), request.args.get("category", "")):
         d = h.to_dict()
         d["favourite"] = h.slug in favs
         hotels.append(d)

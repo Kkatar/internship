@@ -180,8 +180,9 @@ def _seed_orders(db: Database) -> None:
     AuditLog.write("seed.orders", count=3)
 
 
-def seed(db: Database) -> None:
+def seed(db: Database, include_orders: bool = True) -> None:
     _seed_hotels(db)
     _seed_accounts(db)
     _seed_reservations(db)
-    _seed_orders(db)
+    if include_orders:
+        _seed_orders(db)  # skipped when Supabase already owns food orders
